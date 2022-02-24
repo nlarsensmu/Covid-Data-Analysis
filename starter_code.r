@@ -4,7 +4,7 @@ library("ggrepel")
 library("ggcorrplot")
 library("DT")
 
-cases <- read_csv(".\\data\\COVID-19_cases_plus_census.csv")
+cases <- read_csv(".\\data\\COVID-19-20220207.csv")
 
 cases
 
@@ -19,6 +19,13 @@ summary(cases_TX[,1:10])
 
 # I would like to drill down into this graph to see what all is really in the big bin
 ggplot(cases_TX, mapping = aes(confirmed_cases)) + geom_histogram(bins = 20)
+ggsave(".\\charts\\1HistCountiesByCase20bins.pdf")
+
+ggplot(filter(cases_TX, confirmed_cases < 100000), mapping=aes(confirmed_cases)) + geom_histogram(bins=20)
+ggsave(".\\charts\\1HistCountiesByCase20bins-zoomed.pdf")
+
+ggplot(filter(cases_TX, confirmed_cases > 100000), mapping=aes(confirmed_cases)) + geom_histogram(bins=40)
+ggsave(".\\charts\\1HistCountiesByCase20bins-zoomed2.pdf")
 
 ggplot(cases_TX, mapping = aes(x = confirmed_cases, y = deaths, label = county_name)) + 
   geom_smooth(method = lm) +
