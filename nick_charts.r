@@ -21,7 +21,16 @@ ggsave(".\\charts\\1HistCountiesByCase20bins-zoomed2.pdf")
 
 # Lets look at missing data for the following columns
 
-deaths_cases_per_county <- read.csv(".\\data\\deaths_cases_per_county_2021.csv")
+deaths_cases_per_county <- read.csv(".\\data\\query1_02_23_22.csv")
+ggplot(deaths_cases_per_county, mapping = aes(deaths)) + geom_histogram(bins = 20)
+deaths_cases_per_county["deaths_by_pop"] = deaths_cases_per_county$deaths / deaths_cases_per_county$total_pop
+ggplot(deaths_cases_per_county, mapping = aes(deaths_by_pop)) + geom_histogram(bins = 20)
+
+
+# Plot hist
+# Add in deaths per pop
+ggplot(deaths_cases_per_county, mapping = aes(cases)) + geom_histogram(bins = 500)
+deaths_cases_per_county %>% filter(cases >200000000)
 
 
 deaths_cases_per_county <- read.csv(".\\data\\query1_02_23_22.csv")
