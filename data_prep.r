@@ -41,7 +41,7 @@ data_final$no_rent_burden = (data_final$rent_25_to_30_percent +
 # Get cases/deaths per 1000
 data_final$confirmed_cases_per1000 = data_final$confirmed_cases / 
   (data_final$origianl_total_pop)*1000
-data_final$confirmed_deaths_per1000 = data_final$deaths / 
+data_final$deaths_per1000 = data_final$deaths / 
   (data_final$origianl_total_pop)*1000
 
 # Get the percentages of each population group
@@ -53,3 +53,13 @@ data_final$amerindian_pop_per = data_final$amerindian_pop / data_final$origianl_
 data_final$other_race_pop_per = data_final$other_race_pop / data_final$origianl_total_pop
 data_final$two_or_more_races_pop_per = data_final$two_or_more_races_pop / data_final$origianl_total_pop
 data_final$not_hispanic_pop_per = data_final$not_hispanic_pop / data_final$origianl_total_pop
+
+
+
+
+
+temp <- data_final %>% select(total_pop, origianl_total_pop, no_rent_burden, rent_burden,
+                      severe_burden, median_income, new_cases, new_deaths,
+                      deaths_per1000, confirmed_cases_per1000, month, year)
+temp
+temp %>% write.csv(file = "datatable.csv")
