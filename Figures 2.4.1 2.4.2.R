@@ -3,21 +3,14 @@ print(colnames(data))
 data_2021 <- filter(data, year == 2021)
 data_2022 <- filter(data, year == 2022)
 
-
-
-
-cor_TX <- cor(cases_TX_select[,-1])
-
-
 data_sel <- select(data_2022, confirmed_cases, deaths, total_pop, 
                    median_income, rent_over_50_percent, rent_40_to_50_percent,white_pop)
 
 # Figure 2.4.1 
 cor_data_sel <- cor(data_sel)
 p <- ggcorrplot(cor_data_sel, p.mat = cor_pmat(data_sel), insig = "blank", hc.order = TRUE)
-p <- p + labs(caption = "Figure 2.4.1")
 p
-ggsave("Figure 2.4.1.png",  plot = p,  device = "png",  
+ggsave("Corr 1.png",  plot = p,  device = "png",  
        scale = 1,  width = 1200,  height = 700,  units =  "px", dpi = 100
 )
 
@@ -63,9 +56,8 @@ data_sel_final <- select(data_sel,
 
 cor_data_sel <- cor(data_sel_final)
 p <- ggcorrplot(cor_data_sel, p.mat = cor_pmat(data_sel_final), insig = "blank", hc.order = TRUE)
-p <- p + labs(caption = "Figure 2.4.2")
 p
-ggsave("Figure 2.4.2.png",  plot = p,  device = "png",  
+ggsave("Corr 2.png",  plot = p,  device = "png",  
        scale = 1,  width = 1200,  height = 700,  units =  "px", dpi = 100
 )
 
