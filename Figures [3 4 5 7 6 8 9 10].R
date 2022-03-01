@@ -1,3 +1,7 @@
+library(tidyverse)
+library(ggbreak)
+library(ggplot2)
+
 data = read.csv("first week of 2022 by county.csv")
 print(colnames(data))
 data_2021 <- filter(data, year == 2021)
@@ -13,7 +17,7 @@ p <- ggplot(data_joined, aes(x=rent_over_50_percent.x, y=first_week_cases))
 p <- p + geom_point(size=2, colour="darkgreen", shape=1)
 p <- p + xlab("Population paying 50% + on Rent")
 p <- p + ylab("Number of Cases") + ggtitle("Cases vs Population paying 50% + on Rent by County")
-p <- p + labs(caption = "Figure 3")
+#p <- p + labs(caption = "Figure 3")
 p <- p + scale_y_break(c(75000, 175000), scale=0.1)
 p <- p + geom_smooth(method='lm', formula= y~x)
 p
@@ -41,29 +45,56 @@ data2_final <- filter(data2_final, year != 2022) %>%
   filter(new_cases > 0) %>% 
   filter(deaths > 0)
 data2_final
-data2_final$percent_high_rent <- (data2_final$rent_over_50_percent + data2_final$rent_40_to_50_percent) / data2_final$total_pop
+data2_final$percent_high_rent <- (
+  data2_final$rent_over_50_percent + 
+    data2_final$rent_40_to_50_percent +
+    data2_final$rent_35_to_40_percent + 
+    data2_final$rent_30_to_35_percent) / data2_final$total_pop
 data2_final$deaths_per_case <- data2_final$deaths / data2_final$confirmed_cases
 
 #figure 4 final 
 p <- ggplot(data2_final, aes(x=percent_high_rent, y=confirmed_cases))
 p <- p + geom_point(size=1, shape=1)
-p <- p + xlab("Population paying 50% + on Rent")
-p <- p + ylab("Number of Cases") + ggtitle("Cases vs Population paying 50% + on Rent by County")
-p <- p + labs(caption = "Figure 4")
-p <- p + scale_y_break(c(300000,1000000), scale=0.1)
+p <- p + xlab("Population paying 30% + on Rent")
+p <- p + ylab("Number of Cases") + ggtitle("Cases vs Population paying 30% + on Rent by County")
+#p <- p + labs(caption = "Figure 4")
+#p <- p + scale_y_break(c(300000,1000000), scale=0.1)
 p <- p + geom_smooth(method='lm', formula= y~x)
 p
 ggsave("Figure 4.png",  plot = p,  device = "png",  
        scale = 1,  width = 1200,  height = 700,  units =  "px", dpi = 100
 )
+data2_final$y = data2_final$deaths
+data2_final$x = data2_final$confirmed_cases
+
+lm_eqn <- function(df){
+  m <- lm(y ~ x, df)
+  eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2, 
+                   list(a = format(unname(coef(m)[1]), digits = 2),
+                        b = format(unname(coef(m)[2]), digits = 2),
+                        r2 = format(summary(m)$r.squared, digits = 3)))
+  as.character(as.expression(eq))
+  
+  #b <- format(unname(coef(m)[2]), digits = 2)
+  #r2 <- format(summary(m)$r.squared, digits = 3)
+  #paste("slope = ",  b)
+}
+
+string <- lm_eqn(data2_final)
+print(string, parse = TRUE)
+
+
 #figure 5 code notice a different File name
-p <- ggplot(data2_final, aes(x=confirmed_cases, y=deaths))
+p <- ggplot(data2_final, aes(x=x, y=y))
 p <- p + geom_point(size=2, shape=1)
 p <- p + xlab("Number of Cases")
 p <- p + ylab("Number of Deaths") + ggtitle("Cases vs Deaths")
-p <- p + labs(caption = "Figure 5")
+#p <- p + labs(caption = "Figure 5")
 p <- p + scale_y_break(c(10000,20000), scale=0.1)
+p <- p + geom_smooth(method='lm', formula= y~x)
+p <- p + geom_text(x = 1500000, y = 1200, label = string, parse = FALSE)
 p
+
 ggsave("Figure 5.png",  plot = p,  device = "png",  
        scale = 1,  width = 1200,  height = 700,  units =  "px", dpi = 100
 )
@@ -82,7 +113,7 @@ data2$low_income_percentage = (data2$income_less_10000
 min(data2$low_income_percentage)
 data2$low_income_percentage <- data2$low_income_percentage * 100
 p <- ggplot(data2, aes(x=low_income_percentage)) + geom_histogram(colour="black", fill="grey") 
-p <- p + labs(caption = "Figure 7") 
+#p <- p + labs(caption = "Figure 7") 
 p <- p + geom_vline(aes(xintercept=6),
              color="blue", linetype="dashed", size=1)
 p <- p + geom_vline(aes(xintercept=9),
@@ -104,7 +135,7 @@ p <- ggplot(data2, aes(x=confirmed_cases, y=deaths))
 p <- p + geom_point(size=2, shape=1)
 p <- p + xlab("Number of Cases")
 p <- p + ylab("Number of Deaths") + ggtitle("Cases vs Deaths")
-p <- p + labs(caption = "Figure 5")
+#p <- p + labs(caption = "Figure 5")
 p
 
 ggsave("Figure 6.png",  plot = p,  device = "png",  
@@ -122,7 +153,7 @@ p <- ggplot(data2, aes(confirmed_cases, deaths)) +
                      labels = c("<= 6%", "6% < low_income_percentage <= 9%", "> 9%"))
 p <- p + xlab("Number of Cases")
 p <- p + ylab("Number of Deaths") + ggtitle("Cases vs Deaths")
-p <- p + labs(caption = "Figure 6")
+#p <- p + labs(caption = "Figure 6")
 p
 
 #figure 8 code
@@ -143,7 +174,7 @@ p <- p + ggplot(data2, aes(x=amerindian_pop)) + geom_histogram(colour="black", f
 p <- p + ggplot(data2, aes(x=other_race_pop)) + geom_histogram(colour="black", fill="purple") 
 p <- p + ggplot(data2, aes(x=black_pop)) + geom_histogram(colour="black", fill="yellow") 
  
-p <- p + labs(caption = "Figure 8")
+#p <- p + labs(caption = "Figure 8")
 p
 
 ggsave("Figure 8.png",  plot = p,  device = "png",  
@@ -167,7 +198,7 @@ p <- ggplot(demo_data, aes(x = values, fill = group)) +                       # 
 
 p <- p + xlab("Percentage of Population")
 p <- p + ylab("Number of Counties") + ggtitle("Demographic Histogram")
-p <- p + labs(caption = "Figure 8")
+#p <- p + labs(caption = "Figure 8")
 p <- p + scale_y_break(c(1500, 3000), scale=0.1)
 p
 #figure 9 code
@@ -179,7 +210,7 @@ p <- ggplot(data2, aes(x=minority_pop, y=death_rate))
 p <- p + geom_point(size=2, shape=1, colour="darkgreen")
 p <- p + xlab("Minority Population")
 p <- p + ylab("Death Rate") + ggtitle("Minority Population vs Death Rate")
-p <- p + labs(caption = "Figure 9")
+#p <- p + labs(caption = "Figure 9")
 p <- p + geom_smooth(method = "lm", se = FALSE)
 p <- p + scale_y_break(c(0.02, 0.8), scale=0.1)
 p
@@ -192,7 +223,7 @@ p <- ggplot(data2, aes(x=white_pop, y=death_rate))
 p <- p + geom_point(size=2, shape=1, colour="darkgreen")
 p <- p + xlab("White Population")
 p <- p + ylab("Death Rate") + ggtitle("White Population vs Death Rate")
-p <- p + labs(caption = "Figure 10")
+#p <- p + labs(caption = "Figure 10")
 p <- p + geom_smooth(method = "lm", se = FALSE)
 p <- p + scale_y_break(c(0.02, 0.08), scale=0.1)
 p
@@ -205,6 +236,6 @@ p <- ggplot(data2, aes(x=white_pop, y=death_rate))
 p <- p + geom_point(size=2, shape=1, colour="darkgreen")
 p <- p + xlab("White Population")
 p <- p + ylab("Death Rate") + ggtitle("White Population vs Death Rate")
-p <- p + labs(caption = "Figure 10")
+#p <- p + labs(caption = "Figure 10")
 p <- p + geom_smooth(method = "lm", se = FALSE)
 p
