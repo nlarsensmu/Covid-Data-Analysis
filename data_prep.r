@@ -40,9 +40,9 @@ data_final$no_rent_burden = (data_final$rent_25_to_30_percent +
 
 # Get cases/deaths per 1000
 data_final$confirmed_cases_per1000 = data_final$confirmed_cases / 
-  (data_final$origianl_total_pop * 1000)
+  (data_final$origianl_total_pop)*1000
 data_final$confirmed_deaths_per1000 = data_final$deaths / 
-  (data_final$origianl_total_pop * 1000)
+  (data_final$origianl_total_pop)*1000
 
 # Get the percentages of each population group
 data_final$white_pop_per = data_final$white_pop / data_final$origianl_total_pop
