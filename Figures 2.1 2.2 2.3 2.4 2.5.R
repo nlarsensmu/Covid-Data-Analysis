@@ -13,8 +13,8 @@ p <- p + (ggplot(county_data, aes(y=hispanic_per)) + geom_boxplot() + ylab("Hisp
 p <- p + (ggplot(county_data, aes(y=asain_per)) + geom_boxplot() + ylab("Asain %"))
 p <- p + (ggplot(county_data, aes(y=amerindian_per)) + geom_boxplot() + ylab("American Indian %"))
 p <- p + (ggplot(county_data, aes(y=hispanic_per)) + geom_boxplot() + ylab("Other %"))
-p <- p + labs(caption = "Figure 2.1") 
-ggsave("Figure 2.1.png",  plot = p,  device = "png",  
+p
+ggsave("Box plots county data.png",  plot = p,  device = "png",  
        scale = 1,  width = 1200,  height = 700,  units =  "px", dpi = 100
 )
 p
@@ -62,33 +62,29 @@ covid_data_final <- filter(covid_data_final, new_deaths_per > 0)
 
 p <- (ggplot(covid_data_final, aes(x=month, y=new_cases_per)) + geom_boxplot() + ylab("New Cases"))
 p <- p + scale_y_break(c(0.2,0.4))
-p <- p + labs(caption = "Figure 2.2")
 p
-ggsave("Figure 2.2.png",  plot = p,  device = "png",  
+ggsave("Yearly Cases Box Plots.png",  plot = p,  device = "png",  
        scale = 1,  width = 1200,  height = 700,  units =  "px", dpi = 100
 )
 
 
 p <- (ggplot(covid_data_final, aes(x=month, y=new_deaths_per)) + geom_boxplot() + ylab("New Deaths"))
 p <- p + scale_y_break(c(0.0045,0.089), scales = 0.1)
-p <- p + labs(caption = "Figure 2.3")
 p
-ggsave("Figure 2.3.png",  plot = p,  device = "png",  
+ggsave("Yearly Deaths Box Plots.png",  plot = p,  device = "png",  
        scale = 1,  width = 1200,  height = 700,  units =  "px", dpi = 100
 )
 
 p <- (ggplot(covid_data_final, aes(x=month, y=confirmed_cases_per)) + geom_boxplot() + ylab("Total Cases"))
-p <- p + labs(caption = "Figure 2.4")
 p
-ggsave("Figure 2.4.png",  plot = p,  device = "png",  
+ggsave("Yearly Total Cases Box Plots.png",  plot = p,  device = "png",  
        scale = 1,  width = 1200,  height = 700,  units =  "px", dpi = 100
 )
 
 p <- (ggplot(covid_data_final, aes(x=month, y=deaths_per)) + geom_boxplot() + ylab("Total Deaths"))
 p <- p + scale_y_break(c(0.02,0.08))
-p <- p + labs(caption = "Figure 2.5")
 p
-ggsave("Figure 2.5.png",  plot = p,  device = "png",  
+ggsave("Yearly Total Deaths Box Plots.png",  plot = p,  device = "png",  
        scale = 1,  width = 1200,  height = 700,  units =  "px", dpi = 100
 )
 
