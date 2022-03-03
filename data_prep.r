@@ -60,6 +60,12 @@ data_final$not_hispanic_pop_per = data_final$not_hispanic_pop / data_final$origi
 
 temp <- data_final %>% select(total_pop, origianl_total_pop, no_rent_burden, rent_burden,
                       severe_burden, median_income, new_cases, new_deaths,
-                      deaths_per1000, confirmed_cases_per1000, month, year)
+                      deaths_per1000, confirmed_cases_per1000, month, year,
+                      white_pop_per, black_pop_per, asian_pop_per, hispanic_pop_per,
+                      amerindian_pop_per, other_race_pop_per, two_or_more_races_pop_per,
+                      not_hispanic_pop_per)
 temp
 temp %>% write.csv(file = "datatable.csv")
+
+temp %>% summary()
+
